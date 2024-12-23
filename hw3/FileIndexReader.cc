@@ -33,17 +33,13 @@ FileIndexReader::FileIndexReader(const string& file_name,
   file_ = fopen(file_name_.c_str(), "rb");
   Verify333(file_ != nullptr);
 
-  // STEP 1.
-  // Make the (FILE*) be unbuffered.  ("man setbuf")
   setvbuf(file_, NULL, _IONBF, 0);
 
-  // STEP 2.
   // Read the entire file header and convert to host format.
   fseek(file_, 0, SEEK_SET);
   Verify333(fread(&header_, sizeof(header_), 1, file_) == 1);
   header_.ToHostFormat();
 
-  // STEP 3.
   // Verify that the magic number is correct.  Crash if not.
   Verify333(header_.magic_number == kMagicNumber);
 
@@ -56,18 +52,11 @@ FileIndexReader::FileIndexReader(const string& file_name,
 
   if (validate) {
     // Re-calculate the checksum, make sure it matches that in the header.
-    // Use fread() and pass the bytes you read into the crcobj.
-    // Note you don't need to do any host/network order conversion,
-    // since we're doing this byte-by-byte.
     CRC32 crc_obj;
     static constexpr int kBufSize = 512;
     uint8_t buf[kBufSize];
     int left_to_read = header_.doctable_bytes + header_.index_bytes;
     while (left_to_read > 0) {
-      // STEP 4.
-      // You should only need to modify code inside the while loop for
-      // this step. Remember that file_ is now unbuffered, so care needs
-      // to be put into how the file is sequentially read
       int read = fread(buf, 1, kBufSize, file_);
       for (int i = 0; i < read; i++) {
         crc_obj.FoldByteIntoCRC(buf[i]);
@@ -76,8 +65,6 @@ FileIndexReader::FileIndexReader(const string& file_name,
     }
     Verify333(crc_obj.GetFinalCRC() == header_.checksum);
   }
-
-  // Everything looks good; we're done!
 }
 
 FileIndexReader::~FileIndexReader() {

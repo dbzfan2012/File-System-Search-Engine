@@ -100,7 +100,6 @@ static void GetPortAndPath(int argc,
   // - The path (i.e., argv[2]) is a readable directory
   // - You have at least 1 index, and all indices are readable files
 
-  // STEP 1:
   // Input checking
   if (argc < 4) {
     cerr << endl;

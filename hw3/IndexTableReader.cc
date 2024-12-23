@@ -53,11 +53,7 @@ DocIDTableReader* IndexTableReader::LookupWord(const string& word) const {
 
   // Iterate through the elements.
   for (IndexFileOffset_t& offset : elements) {
-    // STEP 1.
-    // Slurp the header information out of the "element" field;
-    // specifically, extract the "word length" field and the "docID
-    // table length" fields, converting from network to host order.
-    WordPostingsHeader header;
+    // Get the header information out of the "element" field
     Verify333(fseek(file_, offset, SEEK_SET) == 0);
     Verify333(fread(&header, sizeof(WordPostingsHeader), 1, file_) == 1);
     header.ToHostFormat();
@@ -68,28 +64,15 @@ DocIDTableReader* IndexTableReader::LookupWord(const string& word) const {
       continue;
     }
 
-    // We might have a match for the word. Read the word itself, using
-    // the "<<" operator to feed a std::stringstream characters read
-    // using fread().
+    // We might have a match for the word
     stringstream ss;
     for (int i = 0; i < header.word_bytes; i++) {
-      // STEP 2.
       char byte;
       Verify333(fread(&byte, sizeof(char), 1, file_) == 1);
       ss << byte;
     }
 
-    // Use ss.str() to extract a std::string from the stringstream,
-    // and use the std::string's "compare()" method to see if the word
-    // we read from the "element" matches our "word" parameter.
     if (word.compare(ss.str()) == 0) {
-      // If it matches, use "new" to heap-allocate and manufacture a
-      // DocIDTableReader.  Be sure to use FileDup() to pass a
-      // duplicated (FILE*) as the first argument to the
-      // DocIDTableReader constructor, since we want the manufactured
-      // DocIDTableReader to have its own (FILE*) handle
-      //
-      // return the new'd (DocIDTableReader*) to the caller.
       IndexFileOffset_t docID_table_offset =
           offset + sizeof(WordPostingsHeader) + header.word_bytes;
       DocIDTableReader* ditr =

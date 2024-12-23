@@ -33,24 +33,6 @@ static const char* kHeaderEnd = "\r\n\r\n";
 static const int kHeaderEndLen = 4;
 
 bool HttpConnection::GetNextRequest(HttpRequest* const request) {
-  // Use WrappedRead from HttpUtils.cc to read bytes from the files into
-  // private buffer_ variable. Keep reading until:
-  // 1. The connection drops
-  // 2. You see a "\r\n\r\n" indicating the end of the request header.
-  //
-  // Hint: Try and read in a large amount of bytes each time you call
-  // WrappedRead.
-  //
-  // After reading complete request header, use ParseRequest() to parse into
-  // an HttpRequest and save to the output parameter request.
-  //
-  // Important note: Clients may send back-to-back requests on the same socket.
-  // This means WrappedRead may also end up reading more than one request.
-  // Make sure to save anything you read after "\r\n\r\n" in buffer_ for the
-  // next time the caller invokes GetNextRequest()!
-
-  // STEP 1:
-
   // Loop through and read from the request
   bool read = false;
   while (1) {
@@ -98,25 +80,6 @@ bool HttpConnection::WriteResponse(const HttpResponse& response) const {
 
 HttpRequest HttpConnection::ParseRequest(const string& request) const {
   HttpRequest req("/");  // by default, get "/".
-
-  // Plan for STEP 2:
-  // 1. Split the request into different lines (split on "\r\n").
-  // 2. Extract the URI from the first line and store it in req.URI.
-  // 3. For the rest of the lines in the request, track the header name and
-  //    value and store them in req.headers_ (e.g. HttpRequest::AddHeader).
-  //
-  // Hint: Take a look at HttpRequest.h for details about the HTTP header
-  // format that you need to parse.
-  //
-  // You'll probably want to look up boost functions for:
-  // - Splitting a string into lines on a "\r\n" delimiter
-  // - Trimming whitespace from the end of a string
-  // - Converting a string to lowercase.
-  //
-  // Note: If a header is malformed, skip that line.
-
-  // STEP 2:
-
   // Splits header components
   std::vector<std::string> headers;
   boost::split(headers, request, boost::is_any_of("\r\n"),

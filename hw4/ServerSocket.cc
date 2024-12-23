@@ -54,13 +54,6 @@ ServerSocket::~ServerSocket() {
 }
 
 bool ServerSocket::BindAndListen(int ai_family, int* const listen_fd) {
-  // Use "getaddrinfo," "socket," "bind," and "listen" to
-  // create a listening socket on port port_.  Return the
-  // listening socket through the output parameter "listen_fd"
-  // and set the ServerSocket data member "listen_sock_fd_"
-
-  // STEP 1:
-
   // Set the hints for the socket
   struct addrinfo hints;
   memset(&hints, 0, sizeof(struct addrinfo));
@@ -129,8 +122,6 @@ bool ServerSocket::Accept(int* const accepted_fd,
   // (Block until a new connection arrives.)  Return the newly accepted
   // socket, as well as information about both ends of the new connection,
   // through the various output parameters.
-
-  // STEP 2:
 
   // Accepts the connection from a client
   while (1) {

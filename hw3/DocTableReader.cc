@@ -44,8 +44,7 @@ bool DocTableReader::LookupDocID(const DocID_t& doc_id,
 
   // Iterate through the elements, looking for our docID.
   for (IndexFileOffset_t& curr_el_offset : elements) {
-    // STEP 1.
-    // Slurp the next docid out of the element.
+    // get the next docid out of the element.
     DoctableElementHeader curr_header;
     Verify333(fseek(file_, curr_el_offset, SEEK_SET) == 0);
     Verify333(
@@ -54,8 +53,7 @@ bool DocTableReader::LookupDocID(const DocID_t& doc_id,
 
     // Is it a match?
     if (curr_header.doc_id == doc_id) {
-      // Yes!  Extract the filename, using a stringstream and its "<<"
-      // operator, fread()'ing a character at a time.
+      // Extract the filename
       stringstream ss;
       for (int i = 0; i < curr_header.file_name_bytes; i++) {
         uint8_t next_char;
@@ -64,17 +62,13 @@ bool DocTableReader::LookupDocID(const DocID_t& doc_id,
         ss << next_char;
       }
 
-      // STEP 2.
-      // Using the str() method of ss to extract a std::string object,
-      // and return it through the output parameter ret_str.  Return
-      // true.
       *ret_str = ss.str();
 
       return true;
     }
   }
 
-  // We failed to find a matching docID, so return false.
+  // failed to find a matching docID, return false.
   return false;
 }
 

@@ -42,19 +42,6 @@ using std::vector;
 namespace hw4 {
 
 bool IsPathSafe(const string& root_dir, const string& test_file) {
-  // rootdir is a directory path. testfile is a path to a file.
-  // return whether or not testfile is within rootdir.
-  // Be sure that your code handles the case when"." and ".."
-  // are found in the path for testfile.
-  //
-  // (HINT: It can be tricky to handle all of the cases where "."
-  // and ".." show up in the passed in file paths. It would be easier
-  // to just handle the absolute paths for the files (no "." or "..").
-  // You may want to see if there is a C function that gets the absolute
-  // path of a file.)
-
-  // STEP 1
-
   // Gets absolute paths for the root dir and test file
   char abs_root_path[PATH_MAX + 1];
   char abs_test_path[PATH_MAX + 1];
@@ -77,14 +64,8 @@ bool IsPathSafe(const string& root_dir, const string& test_file) {
 
 string EscapeHtml(const string& from) {
   // Read through the passed in string, and replace any unsafe
-  // html tokens with the proper escape codes. The characters
-  // that need to be escaped in HTML are the same five as those
-  // that need to be escaped for XML documents. You can see an
-  // example in the comment for this function in HttpUtils.h and
-  // the rest of the characters that need to be replaced can be
-  // looked up online.
+  // html tokens with the proper escape codes. 
 
-  // STEP 2
   // Loops through from string, adding appropriate
   // characters to a new string stream
   std::stringstream ss;
@@ -109,9 +90,6 @@ string EscapeHtml(const string& from) {
   return ss.str();
 }
 
-// Look for a "%XY" token in the string, where XY is a
-// hex number.  Replace the token with the appropriate ASCII
-// character, but only if 32 <= dec(XY) <= 127.
 string URIDecode(const string& from) {
   string retstr;
 
@@ -166,7 +144,7 @@ string URIDecode(const string& from) {
       continue;
     }
 
-    // Great!  Convert and append.
+    //Convert and append.
     retstr.append(1, static_cast<char>(code));
     pos += 2;
   }

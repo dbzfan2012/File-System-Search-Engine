@@ -32,21 +32,7 @@ bool FileReader::ReadFile(string* const contents) {
   string full_file = basedir_ + "/" + fname_;
 
   // Read the file into memory, and store the file contents in the
-  // output parameter "contents."  Be careful to handle binary data
-  // correctly; i.e., you probably want to use the two-argument
-  // constructor to std::string (the one that includes a length as a
-  // second argument).
-  //
-  // You might find ::ReadFileToString() from HW2 useful here. Remember that
-  // this function uses malloc to allocate memory, so you'll need to use
-  // free() to free up that memory after copying to the string output
-  // parameter.
-  //
-  // Alternatively, you can use a unique_ptr with a malloc/free
-  // deleter to automatically manage this for you; see the comment in
-  // HttpUtils.h above the MallocDeleter class for details.
-
-  // STEP 1:
+  // output parameter "contents."
 
   int size;
   // Check if the path is safe to prevent directory traversal

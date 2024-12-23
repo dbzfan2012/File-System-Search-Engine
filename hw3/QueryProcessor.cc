@@ -88,8 +88,6 @@ vector<QueryProcessor::QueryResult>
 QueryProcessor::ProcessQuery(const vector<string>& query) const {
   Verify333(query.size() > 0);
 
-  // STEP 1.
-  // (the only step in this file)
   vector<QueryProcessor::QueryResult> final_result;
   map<DocID_t, QueryProcessor::QueryResult> final_map;
 

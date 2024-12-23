@@ -52,7 +52,6 @@ HashTableReader::LookupElementPositions(HTKey_t hash_key) const {
   IndexFileOffset_t bucket_rec_offset =
       offset_ + sizeof(BucketListHeader) + sizeof(BucketRecord) * bucket_num;
 
-  // STEP 2.
   // Read the "chain len" and "bucket position" fields from the
   // bucket record, and convert from network to host order.
   BucketRecord bucket_rec;
@@ -65,10 +64,8 @@ HashTableReader::LookupElementPositions(HTKey_t hash_key) const {
   // This will be our returned list of element positions.
   list<IndexFileOffset_t> ret_val;
 
-  // STEP 3.
   // Read the "element positions" fields from the "bucket" header into
-  // the returned list.  Be sure to insert into the list in the
-  // correct order (i.e., append to the end of the list).
+  // the returned list
   Verify333(fseek(file_, bucket_rec.position, SEEK_SET) == 0);
   for (int i = 0; i < bucket_rec.chain_num_elements; i++) {
     ElementPositionRecord element_pos;

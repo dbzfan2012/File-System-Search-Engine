@@ -122,17 +122,6 @@ static void HttpServer_ThrFn(ThreadPool::Task* t) {
        << "(IP address " << hst->c_addr << ")" << " connected." << endl;
 
   // Read in the next request, process it, and write the response.
-
-  // Use the HttpConnection class to read and process the next
-  // request from our current client, then write out our response.  If
-  // the client sends a "Connection: close\r\n" header, then shut down
-  // the connection -- we're done.
-  //
-  // Hint: the client can make multiple requests on our single connection,
-  // so we should keep the connection open between requests rather than
-  // creating/destroying the same connection repeatedly.
-
-  // STEP 1:
   bool done = false;
   HttpConnection connection(hst->client_fd);
   while (!done) {
@@ -174,32 +163,8 @@ static HttpResponse ProcessFileRequest(const string& uri,
   // The response we'll build up.
   HttpResponse ret;
 
-  // Steps to follow:
-  // 1. Use the URLParser class to figure out what file name
-  //    the user is asking for. Note that we identify a request
-  //    as a file request if the URI starts with '/static/'
-  //
-  // 2. Use the FileReader class to read the file into memory
-  //
-  // 3. Copy the file content into the ret.body
-  //
-  // 4. Depending on the file name suffix, set the response
-  //    Content-type header as appropriate, e.g.,:
-  //      --> for ".html" or ".htm", set to "text/html"
-  //      --> for ".jpeg" or ".jpg", set to "image/jpeg"
-  //      --> for ".png", set to "image/png"
-  //      etc.
-  //    You should support the file types mentioned above,
-  //    as well as ".txt", ".js", ".css", ".xml", ".gif",
-  //    and any other extensions to get bikeapalooza
-  //    to match the solution server.
-  //
-  // be sure to set the response code, protocol, and message
-  // in the HttpResponse as well.
   string file_name = "";
 
-  // STEP 2:
-  // Parse through the uri, add static keyword if necessary
   URLParser parser;
   parser.Parse(uri);
   file_name.append(parser.path());
@@ -254,28 +219,6 @@ static HttpResponse ProcessQueryRequest(const string& uri,
                                  const list<string>& indices) {
   // The response we're building up.
   HttpResponse ret;
-
-  // Your job here is to figure out how to present the user with
-  // the same query interface as our solution_binaries/http333d server.
-  // A couple of notes:
-  //
-  // 1. The 333gle logo and search box/button should be present on the site.
-  //
-  // 2. If the user had previously typed in a search query, you also need
-  //    to display the search results.
-  //
-  // 3. you'll want to use the URLParser to parse the uri and extract
-  //    search terms from a typed-in search query.  convert them
-  //    to lower case.
-  //
-  // 4. Initialize and use hw3::QueryProcessor to process queries with the
-  //    search indices.
-  //
-  // 5. With your results, try figuring out how to hyperlink results to file
-  //    contents, like in solution_binaries/http333d. (Hint: Look into HTML
-  //    tags!)
-
-  // STEP 3:
 
   // Set up the basic 333gle page
   ret.AppendToBody(kThreegleStr);
